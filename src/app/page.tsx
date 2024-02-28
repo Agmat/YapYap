@@ -5,6 +5,8 @@ import Image from 'next/image';
 
 export default function Home() {
   const [recording, setRecording] = useState(false);
+  const [translation, setTranslation] = useState(null);
+  const [transcription, setTranscription] = useState(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
 
@@ -34,7 +36,9 @@ export default function Home() {
             body: formData
           });
           if (response.ok) {
-            console.log('Audio file saved');
+            const { data } = await response.json();
+            setTranslation(data.translation);
+            setTranscription(data.transcription);
           } else {
             console.error('Failed to save the audio file');
           }
@@ -61,15 +65,15 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div>
-        <button
-          className="bg-accent flex h-[90px] w-[90px] items-center justify-center rounded-full transition duration-150 hover:opacity-50"
-          onClick={recording ? stopRecording : startRecording}
-        >
-          <Image src="/microphone.svg" alt="microphone" width={50} height={50} />
-        </button>
-      </div>
+      {transcription && <p className="mb-10">{transcription}</p>}
+      <button
+        className="bg-accent flex h-[90px] w-[90px] items-center justify-center rounded-full transition duration-150 hover:opacity-50"
+        onClick={recording ? stopRecording : startRecording}
+      >
+        <Image src="/microphone.svg" alt="microphone" width={50} height={50} />
+      </button>
       {recording && <p>Recording...</p>}
+      {translation && <p className="mt-10">{translation}</p>}
     </main>
   );
 }

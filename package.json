@@ -11,6 +11,7 @@
   "dependencies": {
     "formidable": "^3.5.1",
     "next": "14.1.0",
+    "openai": "^4.28.0",
     "react": "^18",
     "react-dom": "^18",
     "react-fontawesome": "^1.7.1"
